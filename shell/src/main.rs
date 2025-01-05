@@ -15,11 +15,32 @@ fn main() {
         let mut input = String::new();                  //input can be mutable ofcourse
         stdin.read_line(&mut input).unwrap();
         let command = input.trim();                      //no trailing white spaces
-        let token = tokenize(command);       //remove some in between whitespace also makes it vector of strings
-        match token.as_slice() {                              //cannot directly destructure a Vec<T> because it is a heap-allocated dynamic collection. Pattern matching works only on fixed-size collections like arrays or slices.
-            ["exit", code] => exit(code.parse::<i32>().unwrap()),
-            ["echo", ..] => println!("{}", token.join(" ")),
-            _ => println!("{} : not found", token.join(" ")),
+        let tokens = tokenize(command);       //remove some in between whitespace also makes it vector of strings
+        match tokens.as_slice() {
+            // Handle exit command (optionally with a return code)
+            ["exit", code] => {
+                let exit_code = code.parse::<i32>().unwrap_or(0); // Default to 0 if parsing fails
+                exit(exit_code);
+            }
+            // Handle echo command
+            ["echo", ..] => {
+                // Print everything after "echo"
+                println!("{}", tokens[1..].join(" "));
+            }
+            // Handle type command
+            ["type", ..] => {
+                if tokens.len() > 1 {
+                    let command_name = tokens[1];
+                    if command_name == "exit" || command_name == "echo" || command_name == "type" {
+                        println!("{} is a shell builtin", command_name);
+                    } else {
+                        println!("{}: not found", command_name);
+                    }
+                } 
+            }
+            _ => println!("{} : not found", tokens.join(" ")),
         }
     }
 }
+    
+
