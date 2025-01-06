@@ -66,40 +66,7 @@ fn handle_commands(tokens: &[&str],path_env: &str){
                     false
                 }
                 
-                fn main() {
-                    // kinda my own options to handle this can use unwrap too tho
-                
-                    print!("$ ");
-                    io::stdout().flush().unwrap(); // Ensure prompt is printed immediately
-                
-                    // Main loop
-                    loop {
-                        let path_env = match std::env::var("PATH") {
-                            Ok(path) => path, // Successfully retrieved PATH cheers
-                            Err(_) => {
-                                eprintln!("Error: PATH environment variable is not set!");
-                                return; // Exit the program gracefully
-                            }
-                        };
-                        
-                        let mut input = String::new();
-                        io::stdin().read_line(&mut input).unwrap(); // Read line without buffer
-                        let input = input.trim(); // Remove leading/trailing spaces
-                
-                        if handle_command(input, &path_env) {
-                            break; // Exit loop if handle_command returns true
-                        }
-                
-                        print!("$ ");
-                        io::stdout().flush().unwrap(); // Print prompt again
-                    }
-                }
-                
-            } 
-        }
-        _ => println!("{} : not found", tokens.join(" ")),
-    }
-}
+
 
 fn tokenize(input: &str) -> Vec<&str> {
     input.split(' ').collect()
